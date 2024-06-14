@@ -1,57 +1,59 @@
-from django.http import HttpResponse
-from datetime import datetime
-from django.template import Template, Context, loader
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from appdeinicio.forms import CrearAlumnoForm, CrearProfesorForm, CrearPruebaForm
 
 import random
 
-from appdeinicio.models import Auto
+from appdeinicio.models import Alumno, Profe, Prueba
+
 
 def inicio(request):
-   #return HttpResponse("Hola, mundo. Estás en la página de inicio de la aplicación Ejercicio3.")
+   #return HttpResponse("Estás en la página de inicio de la aplicación Ejercicio3.")
   return render(request, 'appdeinicio/index.html')
 
-def template1(request, nombre, apellido):
-  fecha = datetime.now()
-  return HttpResponse(f"<h1>Este es el template 1</h1> -- Fecha: {fecha} -- Nombre: {nombre}, Apellido: {apellido}")
 
-def template2(request, nombre, apellido):
-  archivotemplateabierto = open(r"C:\Users\julia\OneDrive\Documents\Coderhouse\RepositorioEjercicio3\templates\template2.html")
-  template = Template(archivotemplateabierto.read())
-  archivotemplateabierto.close()
-  datosparacontexto = {"nombre": nombre,
-                       "apellido": apellido}  
-  contexto = Context(datosparacontexto)
-  template_renderizado = template.render(contexto)
-  return HttpResponse(template_renderizado)
+def profesor(request):
+  formulario = CrearProfesorForm()  
+  if request.method == 'POST':
+    formulario = CrearProfesorForm(request.POST)
+    if formulario.is_valid():
+      datos = formulario.cleaned_data
+      profe = Profe(nombre=datos.get('nombre'), apellido=datos.get('apellido'))
+      profe.save()
+      return redirect('lista_profe')     
+  return render(request, 'appdeinicio/profesor.html', {'formulario': formulario})
 
-def template3(request, nombre, apellido):
-  #archivotemplateabierto = open(r"C:\Users\julia\OneDrive\Documents\Coderhouse\RepositorioEjercicio3\templates\template2.html")
-  #template = Template(archivotemplateabierto.read())
-  #archivotemplateabierto.close()
-  fecha = datetime.now()
-  template =  loader.get_template('template3.html')
-  datosparacontexto = {"nombre": nombre,
-                       "apellido": apellido,
-                       "fecha": fecha}  
-  #contexto = Context(datosparacontexto)
-  template_renderizado = template.render(datosparacontexto)
-  return HttpResponse(template_renderizado)
+def lista_profe(request):  
+  profes = Profe.objects.all()  
+  return render(request, 'appdeinicio/lista_profes.html', {'profes': profes})
+  
 
-def template4(request, nombre, apellido):
-  fecha = datetime.now()
-  datosparacontexto = {"nombre": nombre,
-                       "apellido": apellido,
-                       "fecha": fecha}
-  return render(request, 'template4.html', datosparacontexto)
+def alumno(request):
+  formulario = CrearAlumnoForm()  
+  if request.method == 'POST':
+    formulario = CrearAlumnoForm(request.POST)
+    if formulario.is_valid():
+      datos = formulario.cleaned_data
+      alumno = Alumno(nombre=datos.get('nombre'), apellido=datos.get('apellido'), nota=datos.get('nota'))
+      alumno.save()
+      return redirect('lista_alumno')     
+  return render(request, 'appdeinicio/alumno.html', {'formulario': formulario})  
 
-def probando(request):
-  lista = list(range(500))
-  numeros=random.choices(lista, k=50)
-  print(numeros)
-  return render(request, 'probando_if_for.html', {"numeros": numeros})
+def lista_alumno(request):  
+  alumnos = Alumno.objects.all()  
+  return render(request, 'appdeinicio/lista_alumnos.html', {'alumnos': alumnos})
 
-def crear_auto(request, marca, modelo, anio):
-  auto = Auto(marca=marca, modelo=modelo, anio=anio)
-  auto.save()
-  return render(request, 'otracarpetadetemplates/templateauto.html', {"auto": auto})
+
+def prueba(request):
+  formulario = CrearPruebaForm()
+  if request.method == 'POST':
+    formulario = CrearPruebaForm(request.POST)
+    if formulario.is_valid():
+      datos = formulario.cleaned_data
+      prueba = Prueba(materia=datos.get('materia'), dificultad=datos.get('dificultad'))
+      prueba.save()
+      return redirect('lista_prueba')     
+  return render(request, 'appdeinicio/prueba.html', {'formulario': formulario})  
+
+def lista_prueba(request):
+  pruebas = Prueba.objects.all()  
+  return render(request, 'appdeinicio/lista_pruebas.html', {'pruebas': pruebas})

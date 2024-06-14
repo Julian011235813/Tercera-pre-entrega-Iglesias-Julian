@@ -1,6 +1,6 @@
 from django.contrib import admin
-from appdeinicio.models import Auto
+from appdeinicio.models import Alumno
 
-admin.site.register(Auto)
+admin.site.register(Alumno)
 
 # Register your models here.

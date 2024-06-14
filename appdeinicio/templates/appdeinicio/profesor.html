@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block h1_header %}
+Profesor
+{% endblock h1_header %}
+{% block main %}
+
+<h5>Formulario de profesores</h5>
+
+<form action={% url "profesor" %} method="POST">
+  {% csrf_token %}
+
+{{formulario}}
+
+  <input type="submit" value="Enviar">
+
+</form>
+
+{% endblock main %}

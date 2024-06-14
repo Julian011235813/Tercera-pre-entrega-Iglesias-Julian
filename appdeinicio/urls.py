@@ -2,12 +2,12 @@ from django.urls import path
 from appdeinicio import views
 
 urlpatterns = [
-    path('', views.inicio),
-    path('template1/<str:nombre>/<str:apellido>', views.template1),
-    path('template2/<str:nombre>/<str:apellido>', views.template2),
-    path('template3/<str:nombre>/<str:apellido>', views.template3),
-    path('template4/<str:nombre>/<str:apellido>', views.template4),
-    path('probando/', views.probando),
-    path('autos_crear/<str:marca>/<str:modelo>/<int:anio>', views.crear_auto),
+    path('', views.inicio, name='inicio'),
+    path('profesor/', views.profesor, name='profesor'),
+    path('profes_lista/', views.lista_profe, name='lista_profe'),
+    path('alumno/', views.alumno, name='alumno'),
+    path('alumno_lista/', views.lista_alumno, name='lista_alumno'),
+    path('prueba/', views.prueba, name='prueba'),
+    path('prueba_lista/', views.lista_prueba, name='lista_prueba')    
 ]	
   
